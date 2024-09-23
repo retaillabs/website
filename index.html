@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags for responsiveness and SEO -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retail Labs®</title>
+    <style>
+        /* Basic body styling */
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000; /* Dark background for Matrix theme */
+            color: #fff; /* White text color */
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Container for the image matrix and content */
+        .image-matrix-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        /* The image itself */
+        .image-matrix {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1; /* Keep image behind the overlay and content */
+        }
+
+        /* Overlay grid effect */
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(32, 1fr); /* 32 columns */
+            grid-template-rows: repeat(10, 1fr); /* 10 rows */
+            z-index: 2; /* Keep grid cells on top of the image */
+        }
+
+        /* Each grid cell for the animation */
+        .grid-cell {
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0); /* Start fully transparent */
+            animation-name: matrix-fall;
+            animation-duration: var(--duration);
+            animation-delay: var(--delay); /* Calculated delay per cell */
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        /* The matrix-like vertical falling animation */
+        @keyframes matrix-fall {
+            0% {
+                background-color: rgba(0, 0, 0, 0); /* Fully transparent */
+            }
+            50% {
+                background-color: rgba(0, 0, 0, 0.75); /* Dark */
+            }
+            100% {
+                background-color: rgba(0, 0, 0, 0); /* Fully transparent again */
+            }
+        }
+
+        /* Content styling */
+        .content {
+            position: relative;
+            z-index: 3; /* Above the image and overlay */
+            padding: 20px;
+            max-width: 80%;
+            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+            border-radius: 10px; /* Rounded corners */
+        }
+
+        .content img.logo {
+            max-width: 150px;
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .content h1 {
+            font-size: 3em;
+            margin: 0.2em 0;
+        }
+
+        .content p {
+            font-size: 1.2em;
+            margin: 0.5em 0;
+        }
+
+        .content a {
+            color: #cccccc;/*#182548;*/
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .content a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .content h1 {
+                font-size: 2em;
+            }
+            .content p {
+                font-size: 1em;
+            }
+            .content img.logo {
+                max-width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="image-matrix-container">
+        <!-- The single image representing the matrix -->
+        <img src="concatenated_image.jpg" alt="Matrix of images" class="image-matrix">
+        
+        <!-- Invisible grid overlay for shadow effect with animation -->
+        <div class="grid-overlay"></div>
+
+        <!-- Content: Logo, Coming Soon Message, and Contact Info -->
+        <div class="content">
+            <img src="retaillabs.png" alt="Company Logo" class="logo">
+            <h1>We Are Launching Soon</h1>
+            <p>Stay tuned for something amazing!</p>
+            <p>Reach us at <a href="mailto:contact@retaillabs.ai">contact@retaillabs.ai</a></p>
+        </div>
+    </div>
+
+    <script>
+        const gridOverlay = document.querySelector('.grid-overlay');
+
+        const cellDelay = 0.1; // Time between each cell animation
+        const animationDuration = 2; // Duration of each cell's animation
+
+        // Utility function to generate a random delay between 0 and 2 seconds
+        function getRandomDelay() {
+            return Math.random() * 2; // Random delay between 0s and 2s
+        }
+
+        // Loop to create the grid cells, applying delays to simulate vertical falling
+        for (let col = 1; col <= 32; col++) {
+            const randomColumnDelay = getRandomDelay(); // Random start for the column
+            for (let row = 1; row <= 10; row++) {
+                const cell = document.createElement('div');
+                cell.classList.add('grid-cell');
+
+                // Calculate delay based on the row position to create sequential fall from top to bottom
+                const delayInSeconds = randomColumnDelay + ((row - 1) * cellDelay);
+
+                // Apply the delay and duration for each cell
+                cell.style.setProperty('--delay', `${delayInSeconds}s`);
+                cell.style.setProperty('--duration', `${animationDuration}s`);
+
+                // Set grid position
+                cell.style.gridRowStart = row;
+                cell.style.gridColumnStart = col;
+                
+                gridOverlay.appendChild(cell);
+            }
+        }
+    </script>
+
+</body>
+</html>
